@@ -753,6 +753,7 @@ class RoIHeads(nn.Module):
 
         if self.training:
             proposals, matched_idxs, labels, regression_targets = self.select_training_samples(proposals, targets)
+            print(proposals)
         else:
             labels = None
             regression_targets = None
