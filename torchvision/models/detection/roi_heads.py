@@ -753,7 +753,6 @@ class RoIHeads(nn.Module):
 
         if self.training:
             proposals, matched_idxs, labels, regression_targets = self.select_training_samples(proposals, targets)
-            print(proposals)
         else:
             labels = None
             regression_targets = None
@@ -762,6 +761,8 @@ class RoIHeads(nn.Module):
         box_features = self.box_roi_pool(features, proposals, image_shapes)
         box_features = self.box_head(box_features)
         class_logits, box_regression = self.box_predictor(box_features)
+
+        print(box_regression)
 
         result: List[Dict[str, torch.Tensor]] = []
         losses = {}
@@ -798,6 +799,9 @@ class RoIHeads(nn.Module):
                     pos = torch.where(labels[img_id] > 0)[0]
                     mask_proposals.append(proposals[img_id][pos])
                     pos_matched_idxs.append(matched_idxs[img_id][pos])
+
+                print("mask")
+                print(mask_proposals)
             else:
                 pos_matched_idxs = None
 
