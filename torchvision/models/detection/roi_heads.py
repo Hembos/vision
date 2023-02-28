@@ -762,7 +762,7 @@ class RoIHeads(nn.Module):
         box_features = self.box_head(box_features)
         class_logits, box_regression = self.box_predictor(box_features)
 
-        print(box_regression)
+        print(proposals)
 
         result: List[Dict[str, torch.Tensor]] = []
         losses = {}
@@ -799,9 +799,6 @@ class RoIHeads(nn.Module):
                     pos = torch.where(labels[img_id] > 0)[0]
                     mask_proposals.append(proposals[img_id][pos])
                     pos_matched_idxs.append(matched_idxs[img_id][pos])
-
-                print("mask")
-                print(mask_proposals)
             else:
                 pos_matched_idxs = None
 
@@ -809,6 +806,8 @@ class RoIHeads(nn.Module):
                 mask_features = self.mask_roi_pool(features, mask_proposals, image_shapes)
                 mask_features = self.mask_head(mask_features)
                 mask_logits = self.mask_predictor(mask_features)
+                print("mask")
+                print(mask_logits)
             else:
                 raise Exception("Expected mask_roi_pool to be not None")
 
