@@ -111,6 +111,8 @@ class GeneralizedRCNN(nn.Module):
 
         self.detections = detections
 
+        print(self.detections)
+
         if torch.jit.is_scripting():
             if not self._has_warned:
                 warnings.warn("RCNN always returns a (Losses, Detections) tuple in scripting")
@@ -120,4 +122,4 @@ class GeneralizedRCNN(nn.Module):
             return self.eager_outputs(losses, detections)
 
     def get_detections(self):
-        return self.detections
+        return 1
