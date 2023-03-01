@@ -111,6 +111,8 @@ def maskrcnn_loss(mask_logits, proposals, gt_masks, gt_labels, mask_matched_idxs
     mask_targets = [
         project_masks_on_boxes(m, p, i, discretization_size) for m, p, i in zip(gt_masks, proposals, mask_matched_idxs)
     ]
+    print("mask_targets")
+    print(mask_targets)
 
     labels = torch.cat(labels, dim=0)
     mask_targets = torch.cat(mask_targets, dim=0)
@@ -817,8 +819,6 @@ class RoIHeads(nn.Module):
                     raise ValueError("targets, pos_matched_idxs, mask_logits cannot be None when training")
 
                 gt_masks = [t["masks"] for t in targets]
-                print("gt_mask")
-                print(gt_masks)
                 gt_labels = [t["labels"] for t in targets]
                 rcnn_loss_mask = maskrcnn_loss(mask_logits, mask_proposals, gt_masks, gt_labels, pos_matched_idxs)
                 loss_mask = {"loss_mask": rcnn_loss_mask}
