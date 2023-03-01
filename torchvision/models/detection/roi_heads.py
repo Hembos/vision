@@ -71,6 +71,8 @@ def maskrcnn_inference(x, labels):
     # select masks corresponding to the predicted classes
     num_masks = x.shape[0]
     boxes_per_image = [label.shape[0] for label in labels]
+    print(labels.shape)
+    print(x.shape)
     labels = torch.cat(labels)
     index = torch.arange(num_masks, device=labels.device)
     mask_prob = mask_prob[index, labels][:, None]
