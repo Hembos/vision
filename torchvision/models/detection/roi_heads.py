@@ -824,9 +824,6 @@ class RoIHeads(nn.Module):
 
             losses.update(loss_mask)
 
-            print("res")
-            print(r)
-
         # keep none checks in if conditional so torchscript will conditionally
         # compile each branch
         if (
