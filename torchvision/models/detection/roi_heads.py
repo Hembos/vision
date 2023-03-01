@@ -111,8 +111,6 @@ def maskrcnn_loss(mask_logits, proposals, gt_masks, gt_labels, mask_matched_idxs
     mask_targets = [
         project_masks_on_boxes(m, p, i, discretization_size) for m, p, i in zip(gt_masks, proposals, mask_matched_idxs)
     ]
-    print("mask_targets")
-    print(mask_targets)
 
     labels = torch.cat(labels, dim=0)
     mask_targets = torch.cat(mask_targets, dim=0)
@@ -764,8 +762,6 @@ class RoIHeads(nn.Module):
         box_features = self.box_head(box_features)
         class_logits, box_regression = self.box_predictor(box_features)
 
-        print(proposals)
-
         result: List[Dict[str, torch.Tensor]] = []
         losses = {}
         if self.training:
@@ -808,8 +804,6 @@ class RoIHeads(nn.Module):
                 mask_features = self.mask_roi_pool(features, mask_proposals, image_shapes)
                 mask_features = self.mask_head(mask_features)
                 mask_logits = self.mask_predictor(mask_features)
-                print("mask")
-                print(mask_logits)
             else:
                 raise Exception("Expected mask_roi_pool to be not None")
 
@@ -822,6 +816,10 @@ class RoIHeads(nn.Module):
                 gt_labels = [t["labels"] for t in targets]
                 rcnn_loss_mask = maskrcnn_loss(mask_logits, mask_proposals, gt_masks, gt_labels, pos_matched_idxs)
                 loss_mask = {"loss_mask": rcnn_loss_mask}
+
+                masks_probs = maskrcnn_inference(mask_logits, labels)
+                for mask_prob, r in zip(masks_probs, result):
+                    r["masks"] = mask_prob
             else:
                 labels = [r["labels"] for r in result]
                 masks_probs = maskrcnn_inference(mask_logits, labels)
@@ -829,6 +827,9 @@ class RoIHeads(nn.Module):
                     r["masks"] = mask_prob
 
             losses.update(loss_mask)
+
+            print("res")
+            print(r)
 
         # keep none checks in if conditional so torchscript will conditionally
         # compile each branch
