@@ -808,6 +808,8 @@ class RoIHeads(nn.Module):
                 mask_logits = self.mask_predictor(mask_features)
                 print("mask")
                 print(mask_logits)
+                print("gt_mask")
+                print(gt_masks)
             else:
                 raise Exception("Expected mask_roi_pool to be not None")
 
